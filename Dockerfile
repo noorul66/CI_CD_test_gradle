@@ -5,6 +5,6 @@ RUN chmod +x gradlew
 RUN ./gradlew build
 
 FROM tomcat:9
-WORKDIR /usr/local/tomcat/webapps
+WORKDIR /Program Files\Apache Software Foundation\Tomcat 10.1\webapps
 COPY --from=base /app/build/libs/sampleweb-0.0.1-SNAPSHOT.war .
 RUN rm -rf ROOT && mv sampleweb-0.0.1-SNAPSHOT.war ROOT.war
