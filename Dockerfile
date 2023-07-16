@@ -1,10 +1,10 @@
-FROM openjdk:11 as base
+FROM openjdk:11 as base 
 WORKDIR /app
-COPY . .
+COPY . . 
 RUN chmod +x gradlew
-RUN ./gradlew build
+RUN ./gradlew build 
 
 FROM tomcat:9
-WORKDIR /Program Files\Apache Software Foundation\Tomcat 10.1\webapps
-COPY --from=base /app/build/libs/sampleweb-0.0.1-SNAPSHOT.war .
-RUN rm -rf ROOT && mv sampleweb-0.0.1-SNAPSHOT.war ROOT.war
+WORKDIR webapps
+COPY --from=base /app/build/libs/sampleWeb-0.0.1-SNAPSHOT.war .
+RUN rm -rf ROOT && mv sampleWeb-0.0.1-SNAPSHOT.war ROOT.war
