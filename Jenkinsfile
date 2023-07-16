@@ -35,9 +35,15 @@ timeout(time: 1, unit: 'HOURS') {
                     docker push 35.232.95.226:8083/springapp:${VERSION}
                     docker rmi 35.232.95.226:8083/springapp:${VERSION}
                     '''
-                    }
+                                        }
                 }
+            
             }
         }
+   post {
+		always {
+			mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "noorulgcp@gmail.com";  
+		}
+	}
     }
 }
