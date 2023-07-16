@@ -40,6 +40,17 @@ timeout(time: 1, unit: 'HOURS') {
             
             }
         }
+         stage('indentifying misconfigs using datree in helm charts'){
+            steps{
+                script{
+
+                    dir('kubernetes/') {
+                        #withEnv(['DATREE_TOKEN=GJdx2cP2TCDyUY3EhQKgTc']) {
+                              sh 'helm datree test myapp/'
+                        }
+                    }
+                }
+            }
     }
     post {
 		always {
