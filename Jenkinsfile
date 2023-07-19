@@ -30,10 +30,10 @@ timeout(time: 1, unit: 'HOURS') {
                 script{
                     withCredentials([string(credentialsId: 'docker_pass', variable: 'docker_password')]) {
                       sh'''
-                    docker build -t 35.184.24.112:8083/springapp:${VERSION} .
-                    docker login -u admin -p $docker_password 35.184.24.112:8083
-                    docker push 35.184.24.112:8083/springapp:${VERSION}
-                    docker rmi 35.184.24.112:8083/springapp:${VERSION}
+                    docker build -t 34.27.212.222:8083/springapp:${VERSION} .
+                    docker login -u admin -p $docker_password 34.27.212.222:8083
+                    docker push 34.27.212.222:8083/springapp:${VERSION}
+                    docker rmi 34.27.212.222:8083/springapp:${VERSION}
                     '''
                                         }
                 }
@@ -45,7 +45,7 @@ timeout(time: 1, unit: 'HOURS') {
                 script{
 
                     dir('kubernetes/') {
-                      //withEnv(['DATREE_TOKEN=GJdx2cP2TCDyUY3EhQKgTc']) {
+                      withEnv(['DATREE_TOKEN=c33e8be0-97ac-49dd-bd16-06c1894cb2fd']) {
                               sh 'helm datree test myapp/'
                         }
                     }
