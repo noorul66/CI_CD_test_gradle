@@ -24,13 +24,15 @@ pipeline {
             }
         }
 
-        stage("Docker Build & Push") {
-            agent any
-            steps {
-                script {
-                    // Your Docker build and push steps here
-                    // Make sure to replace the placeholders with your actual commands
-                }
+        stage("docker build & docker push"){
+            steps{
+                script{
+                    withCredentials([string(credentialsId: 'docker_pass', variable: 'docker_password')]) {
+                             sh '''
+                                docker build -t 34.125.214.226:8083/springapp:${VERSION} .
+                                docker login -u admin -p $docker_password 34.125.214.226:8083 
+                                docker push  34.125.214.226:8083/springapp:${VERSION}
+                                docker rmi 34.125.214.226:8083/springapp:${VERSION} }
             }
         }
 
@@ -38,9 +40,8 @@ pipeline {
     }
 
     post {
-        always {
-            // Your post-build actions here
-            // For example, sending notifications or cleaning up resources
-        }
+		always {
+			mail bcc: '', body: "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "${currentBuild.result} CI: Project name -> ${env.JOB_NAME}", to: "deekshith.snsep@gmail.com";  
+		}
     }
 }
