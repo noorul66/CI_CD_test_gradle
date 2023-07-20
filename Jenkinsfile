@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        VERSION = "${env.BUILD_ID}"
+    }
 
     stages {
         stage("Sonar Quality Check") {
@@ -24,9 +27,25 @@ pipeline {
             }
         }
 
-        stage("docker build & docker push"){
-            steps{
-                script{
+        stage('pushing the helm charts to nexus') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'docker_pass', variable: 'docker_password')]) {
+                        dir('kubernetes/') {
+                            sh """
+                            helmversion=$(helm show chart myapp | grep version | cut -d: -f 2 | tr -d ' ')
+                            tar -czvf myapp-\${helmversion}.tgz myapp/
+                            curl -u admin:\$docker_password http://34.171.89.251:8081/repository/helm-hosted/ --upload-file myapp-\${helmversion}.tgz -v
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        stage("docker build & docker push") {
+            steps {
+                script {
                     withCredentials([string(credentialsId: 'docker_pass', variable: 'docker_password')]) {
                         sh '''
                             docker build -t 34.171.89.251:8083/springapp:${VERSION} .
